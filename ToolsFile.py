@@ -1,6 +1,7 @@
 import re
 # Below are a bunch of methods for cleaning the code from comments
 # before exectuion.
+# test
 
 
 # We read the assembly program from the user in program.txt
