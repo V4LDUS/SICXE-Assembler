@@ -70,11 +70,11 @@ def checkinstructions(teststring):
 def operations():
     opArray = []
     for i in range(1, len(progArr)):  # We start from the row after start
-         if checkinstructions(progArr[i][1]) == True:
+        if checkinstructions(progArr[i][1]) == True:
             opArray.append(progArr[i][1])
-         elif ('.' in progArr[i][2]) or ('.' in progArr[i][1]) or ('.' in progArr[i][0]):
+        elif ('.' in progArr[i][2]) or ('.' in progArr[i][1]) or ('.' in progArr[i][0]):
             opArray.append(progArr[i][1])
-         else:
+        else:
             print("ERROR: Wrong instruction input.")
             break
     return opArray
@@ -87,7 +87,7 @@ def operations():
 def variables():
     varArray = []
     for i in range(1, len(progArr)):  # We start from the row
-                    varArray.append(progArr[i][2])
+        varArray.append(progArr[i][2])
     return varArray
 
 
@@ -98,7 +98,7 @@ def variables():
 def indexs():
     indexsArray = []
     for i in range(1, len(progArr)):  # We start from the row
-            indexsArray.append(progArr[i][0])
+        indexsArray.append(progArr[i][0])
     return indexsArray
 
 
@@ -131,19 +131,46 @@ def ProgLength():
                   3).split('x')[-1].upper().zfill(6)
     # print(ProgLen)
     return ProgLen
+
+
 def checkformat(teststring1):
-    for i in range(1,len(instructions)):
+    for i in range(len(instructions)):
         if instructions[i][0] in teststring1:
 
             return instructions[i][1]
 
+
+def getOpCode(teststring1):
+    for i in range(len(instructions)):
+        if instructions[i][0] in teststring1:
+
+            return instructions[i][2]
+
+
+# Used to find the split of the arithematic operation of the addresses
 def handlEQU(var):
 
     finalArray = appendall()
     for i in range(len(finalArray)):
         if var in finalArray[i][0]:
-             wanted = i
+            wanted = i
 
     return wanted
 
 
+def GetRegister(var):
+
+    if 'A' in var:
+        return 0
+    if 'X' in var:
+        return 1
+    if 'L' in var:
+        return 2
+    if 'B' in var:
+        return 3
+    if 'S' in var:
+        return 4
+    if 'T' in var:
+        return 5
+    if 'F' in var:
+        return 6
