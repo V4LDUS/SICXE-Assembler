@@ -10,14 +10,14 @@ fin = open("testprogram.txt", "rt")
 fout = open("program.txt", "wt")
 for line in fin:
     # We put a '*' after each line of assembly code
-    fout.write(re.sub('\s+', '*', line))
+    fout.write(re.sub('\s+', '_', line))
     fout.write('\n')
 
 fin.close()
 fout.close()
 
 with open("program.txt") as textFile:
-    progArr = [line.split('*') for line in textFile]
+    progArr = [line.split('_') for line in textFile]
 with open("instructions.txt") as textFile:
     instructions = [line.split(' ') for line in textFile]
 
@@ -42,8 +42,22 @@ def checkinstructions(teststring):
         found = True
     if teststring in "RESTW":
         found = True
+    if teststring in "RESDW":
+        found = True
+    if teststring in "BASE":
+        found = True
+    if teststring in "LTORG":
+        found = True
+    if teststring in "EQU":
+        found = True
+    if teststring in "RSUB":
+        found = True
+    if "=" in teststring:
+        found = True
+    if "END" in teststring:
+        found = True
     while i in range(len(instructions)):
-        if teststring in instructions[i][0]:
+        if instructions[i][0] in teststring:
             found = True
         i = i + 1
     return found
@@ -55,14 +69,14 @@ def checkinstructions(teststring):
 # start with a comment
 def operations():
     opArray = []
-    for i in range(1, len(progArr)-1):  # We start from the row
-        if not '.' in progArr[i][1]:
-            if not '.' in progArr[i][0]:
-                if checkinstructions(progArr[i][1]) == True:
-                    opArray.append(progArr[i][1])
-                elif checkinstructions(progArr[i][1]) == False:
-                    print("ERROR: Wrong instruction input.")
-                    break
+    for i in range(1, len(progArr)):  # We start from the row after start
+         if checkinstructions(progArr[i][1]) == True:
+            opArray.append(progArr[i][1])
+         elif ('.' in progArr[i][2]) or ('.' in progArr[i][1]) or ('.' in progArr[i][0]):
+            opArray.append(progArr[i][1])
+         else:
+            print("ERROR: Wrong instruction input.")
+            break
     return opArray
 
 
@@ -72,10 +86,7 @@ def operations():
 # start with a comment
 def variables():
     varArray = []
-    for i in range(1, len(progArr)-1):  # We start from the row
-        if not '.' in progArr[i][2]:
-            if not '.' in progArr[i][1]:
-                if not '.' in progArr[i][0]:
+    for i in range(1, len(progArr)):  # We start from the row
                     varArray.append(progArr[i][2])
     return varArray
 
@@ -86,8 +97,7 @@ def variables():
 # start with a comment
 def indexs():
     indexsArray = []
-    for i in range(1, len(progArr)-1):  # We start from the row
-        if not '.' in progArr[i][0]:
+    for i in range(1, len(progArr)):  # We start from the row
             indexsArray.append(progArr[i][0])
     return indexsArray
 
@@ -121,3 +131,19 @@ def ProgLength():
                   3).split('x')[-1].upper().zfill(6)
     # print(ProgLen)
     return ProgLen
+def checkformat(teststring1):
+    for i in range(1,len(instructions)):
+        if instructions[i][0] in teststring1:
+
+            return instructions[i][1]
+
+def handlEQU(var):
+
+    finalArray = appendall()
+    for i in range(len(finalArray)):
+        if var in finalArray[i][0]:
+             wanted = i
+
+    return wanted
+
+

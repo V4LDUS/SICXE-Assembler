@@ -1,21 +1,22 @@
-COPY      START        0
-FIRST      STL       RETADR
-           LDB          #LENGTH
+COPY       START         0
+FIRST      STL           RETADR
+           LDB           #LENGTH
            BASE          LENGTH
-CLOOP     +JSUB           RDREC
+CLOOP     +JSUB          DREC
            LDA           LENGTH
            COMP            #0
            JEQ           ENDFIL
           +JSUB           WRREC
             J             CLOOP
+.test comment
 ENDFIL     LDA           =C'EOF'
            STA           BUFFER
            LDA             #3
            STA           LENGTH
           +JSUB           WRREC
             J            @RETADR
-          LTORG
-*        =C'EOF'
+	   LTORG               
+*         =C'EOF'     
 RETADR     RESW             1
 LENGHT     RESW             1
 BUFFER     RESB            4096
@@ -34,7 +35,7 @@ RLOOP      TD             INPUT
            TIXR             T
            JLT            RLOOP
 EXIT       STX           LENGTH
-           RSUB
+           RSUB              
 INPUT      BYTE             X'F'
 WRREC     CLEAR             X
            LDT           LENGTH
@@ -42,8 +43,8 @@ WLOOP       TD            =X'05'
            JEQ             WLOOP
            LDCH          BUFFER,X
             WD            =X'05'
-           TDXR             T
+           TIXR             T
            JLT             WLOOP
-           RSUB
+           RSUB       
             END            FIRST
-*          =X'05'
+*          =X'05'    
