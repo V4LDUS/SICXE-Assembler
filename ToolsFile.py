@@ -20,6 +20,10 @@ with open("program.txt") as textFile:
     progArr = [line.split('_') for line in textFile]
 with open("instructions.txt") as textFile:
     instructions = [line.split(' ') for line in textFile]
+with open("symbolTable.txt") as textFile:
+    symbols = [line.split(' ') for line in textFile]
+with open("literalTable.txt") as textFile:
+    literals = [line.split(' ') for line in textFile]
 
 # To check the instructions for the unique. #
 # ones and the one in the instruction text. #
@@ -142,8 +146,7 @@ def checkformat(teststring1):
 
 def getOpCode(teststring1):
     for i in range(len(instructions)):
-        if instructions[i][0] in teststring1:
-
+        if instructions[i][0] in teststring1 :
             return instructions[i][2]
 
 
@@ -174,3 +177,36 @@ def GetRegister(var):
         return 5
     if 'F' in var:
         return 6
+
+def findAddress(mystring): #method to search for the address in the symbol table
+    if '=' in mystring :
+        for i in range(len(literals)):
+            if literals[i][0] in mystring :
+                return literals[i][2].replace("\n",'')
+                break
+    else :
+        for i in range(len(symbols)):
+            if symbols[i][0] in mystring:
+                return symbols[i][1].replace("\n", '')
+                break
+
+def findpc(myindex) : #method to find the pc
+    for i in range(len(locationCounter)):
+        if myindex==i :#law ana wa2ef 3and element rakam i
+            if "-----" in locationCounter[i+1]:
+                return locationCounter[i+2].replace("\n", '')
+                break
+            else:
+                return locationCounter[i+1].replace("\n", '')
+                break
+
+def findBase(): #method to search for the address in the symbol table
+    finArr=appendall()
+    for i in range(len(finArr)):
+        if 'BASE' in finArr[i][1] :
+            baseVar=finArr[i][2]
+            break
+    for i in range(len(symbols)):
+        if symbols[i][0] in baseVar:
+            return symbols[i][1].replace("\n", '')
+            break

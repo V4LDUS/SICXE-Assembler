@@ -2,7 +2,7 @@ COPY       START         0
 FIRST      STL           RETADR
            LDB           #LENGTH
            BASE          LENGTH
-CLOOP     +JSUB          DREC
+CLOOP     +JSUB          RDREC
            LDA           LENGTH
            COMP            #0
            JEQ           ENDFIL
@@ -18,7 +18,7 @@ ENDFIL     LDA           =C'EOF'
 	   LTORG               
 *         =C'EOF'     
 RETADR     RESW             1
-LENGHT     RESW             1
+LENGTH     RESW             1
 BUFFER     RESB            4096
 BUFFEND    EQU              *
 MAXLEN     EQU        BUFFEND-BUFFER
@@ -36,7 +36,7 @@ RLOOP      TD             INPUT
            JLT            RLOOP
 EXIT       STX           LENGTH
            RSUB              
-INPUT      BYTE             X'F1'
+INPUT      BYTE             X'F'
 WRREC     CLEAR             X
            LDT           LENGTH
 WLOOP       TD            =X'05'
