@@ -1,7 +1,5 @@
 import re
-# Below are a bunch of methods for cleaning the code from comments
-# before exectuion.
-# test
+# The toolsFile program is used as external tool for usage in pass 1 & 2
 
 
 # We read the assembly program from the user in program.txt
@@ -33,6 +31,7 @@ locationFile = open("locationCounter.txt", "rt")
 locationCounter = locationFile.readlines()
 
 
+# Used as a checker if there's an undefined instruction
 def checkinstructions(teststring):
     i = 0
     found = False
@@ -132,7 +131,7 @@ def ProgName():
 
 def ProgLength():
     ProgLen = hex(int(locationCounter[-1], 16) +
-                  3).split('x')[-1].upper().zfill(6)
+                  1).split('x')[-1].upper().zfill(6)
     # print(ProgLen)
     return ProgLen
 
@@ -146,7 +145,7 @@ def checkformat(teststring1):
 
 def getOpCode(teststring1):
     for i in range(len(instructions)):
-        if instructions[i][0] in teststring1 :
+        if instructions[i][0] in teststring1:
             return instructions[i][2]
 
 
@@ -178,21 +177,23 @@ def GetRegister(var):
     if 'F' in var:
         return 6
 
-def findAddress(mystring): #method to search for the address in the symbol table
-    if '=' in mystring :
+
+def findAddress(mystring):  # method to search for the address in the symbol table
+    if '=' in mystring:
         for i in range(len(literals)):
-            if literals[i][0] in mystring :
-                return literals[i][2].replace("\n",'')
+            if literals[i][0] in mystring:
+                return literals[i][2].replace("\n", '')
                 break
-    else :
+    else:
         for i in range(len(symbols)):
             if symbols[i][0] in mystring:
                 return symbols[i][1].replace("\n", '')
                 break
 
-def findpc(myindex) : #method to find the pc
+
+def findpc(myindex):  # method to find the pc
     for i in range(len(locationCounter)):
-        if myindex==i :#law ana wa2ef 3and element rakam i
+        if myindex == i:  # law ana wa2ef 3and element rakam i
             if "-----" in locationCounter[i+1]:
                 return locationCounter[i+2].replace("\n", '')
                 break
@@ -200,13 +201,12 @@ def findpc(myindex) : #method to find the pc
                 return locationCounter[i+1].replace("\n", '')
                 break
 
-def findBase(): #method to search for the address in the symbol table
-    finArr=appendall()
+
+def findBase():  # method to search for the address in the symbol table
+    finArr = appendall()
     for i in range(len(finArr)):
-        if 'BASE' in finArr[i][1] :
-            baseVar=finArr[i][2]
-            break
+        if 'BASE' in finArr[i][1]:
+            baseVar = finArr[i][2]
     for i in range(len(symbols)):
         if symbols[i][0] in baseVar:
             return symbols[i][1].replace("\n", '')
-            break

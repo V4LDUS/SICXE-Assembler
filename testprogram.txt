@@ -36,7 +36,7 @@ RLOOP      TD             INPUT
            JLT            RLOOP
 EXIT       STX           LENGTH
            RSUB              
-INPUT      BYTE             X'F'
+INPUT      BYTE             X'F1'
 WRREC     CLEAR             X
            LDT           LENGTH
 WLOOP       TD            =X'05'
