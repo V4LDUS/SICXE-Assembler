@@ -67,7 +67,9 @@ def ObjectCode():
         # If we passed by an RSUB
         elif "RSUB" in finalArr[i][1]:
             objectcodeFile.write("4F0000"+"\n")
-
+        elif '.' in finalArr[i][0] or '.' in finalArr[i][1] or '.' in finalArr[i][2]:
+            opBits = "---"
+            objectcodeFile.write(opBits + "\n")
         # If the operation is a lateral
         elif '=' in finalArr[i][1]:
             # Byte have two cases: either ASCII of characters or their immediate value.
