@@ -21,9 +21,8 @@ def getMrecord():
     for i in range(len(finalArr)):
         if '+' in finalArr[i][1]:
             if '#' in finalArr[i][2] and finalArr[i][2].replace('#', '').isdigit():
-                pass
-                # just skip the immediate
-            else:  # law case 3adeya lel m record
+                pass  # Skips the immediate case
+            else:  # If it's a normal format 4 case
                 wantedLocation = hex(
                     int(LArray[i], 16)+1).split('x')[-1].upper()
                 wantedLocationStr = str(wantedLocation).zfill(6)
@@ -111,7 +110,7 @@ def ObjectCode():
                     r2 = '0'
                 objectcodeFile.write(opBits+r1+r2 + "\n")
 
-            # Format 3 & 4
+            # Format 3 & 4 & Q
             elif ToolsFile.checkformat(finalArr[i][1]) == '34':
                 opHex = ToolsFile.getOpCode(finalArr[i][1].replace("\n", ''))
                 opInt = int(opHex, 16)
@@ -150,30 +149,57 @@ def ObjectCode():
                     # Get the address of the variable column whether symbol table or literal table
                     wholeAddressStr = ToolsFile.findAddress(
                         finalArr[i][2]).zfill(5)  # To make sure it's in 20 bits
+                elif '&' in finalArr[i][1]:  # The Q format case
+                    niBits = '00'
+                    eBits = '0'
+                    firstAddress = ToolsFile.findAddress(  # Searches in the symbol table
+                        finalArr[i][2])
+                    secondAddress = ToolsFile.findpc(i)  # Gets the PC counter
+                    # The displacement calculation
+                    QWholeAddress = int(firstAddress, 16) - \
+                        int(secondAddress, 16)
+                    # Q-format's flags' conditions
+                    if QWholeAddress == 0:
+                        eBits = 1
+                    if QWholeAddress < 0 and (QWholeAddress % 2) == 1:
+                        niBits = '11'
+                    elif QWholeAddress < 0 and (QWholeAddress % 2) == 0:
+                        niBits = '01'
+                    elif QWholeAddress > 0 and (QWholeAddress % 2) == 1:
+                        niBits = '10'
+                    else:
+                        niBits = '00'
+                    wholeAddress = hex(QWholeAddress & (
+                        2**20-1)).split('x')[-1].upper()
+                    wholeAddress = wholeAddress[-3:]
+                    wholeAddressStr = str(wholeAddress).zfill(3)
+
                 else:  # Format 3
                     if '#' in finalArr[i][2]:  # If it's immediate & digit ex: #4096
                         if finalArr[i][2].replace('#', '').isdigit():
                             immediate = finalArr[i][2].replace('#', '')
                             wholeAddressStr = immediate.zfill(3)
-                    else:
-                        firstAddress = ToolsFile.findAddress(
-                            finalArr[i][2])  # keda law heya pc relative
-                        secondAddress = ToolsFile.findpc(i)
+                    else:  # We calculate the displacement
+                        firstAddress = ToolsFile.findAddress(  # Searches in the symbol table
+                            finalArr[i][2])
+                        secondAddress = ToolsFile.findpc(
+                            i)  # gets the PC counter
+                        # The displacement calculation
                         wholeAddress = hex(
                             int(firstAddress, 16)-int(secondAddress, 16)).split('x')[-1].upper()
-                        if len(wholeAddress) > 3:  # keda law heya base relative
-                            bpBits = '10'
-                            secondAddress = ToolsFile.findBase()
+                        if len(wholeAddress) > 3:  # The out of range case
+                            bpBits = '10'  # b & p will be 1 0 since it's out of range
+                            secondAddress = ToolsFile.findBase()  # Recalculates with the base
                         wholeAddress = hex((
                             int(firstAddress, 16)-int(secondAddress, 16)) & (2**20-1)).split('x')[-1].upper()
                         wholeAddress = wholeAddress[-3:]
                         wholeAddressStr = str(wholeAddress).zfill(3)
-                # gma3 nos el obj code in binary
+                # The object code assembly
                 part1objBin = (opBits+''+niBits+''+xBits+''+bpBits+''+eBits)
-                part1objInt = (int(part1objBin, 2))  # 7awelo int
-                part1objhex = hex(part1objInt).split(
-                    'x')[-1].upper().zfill(3)  # then hex
-                # then 7otto fel file gambo el address
+                part1objInt = (int(part1objBin, 2))  # Turn it to int
+                part1objhex = hex(part1objInt).split(  # Then hex
+                    'x')[-1].upper().zfill(3)
+                # Stored in the object code file
                 objectcodeFile.write(part1objhex+''+wholeAddressStr+'\n')
 
     objectcodeFile.close()
@@ -197,7 +223,7 @@ def HTME_Record():
     # To get the end (E.)
     End = str("E." + ToolsFile.startingadress().zfill(6))
 
-    # We assigned our initiatives for the loop below
+    # assigned our initiatives for the loop below
     Count = 0
     TStart = ToolsFile.startingadress()
     Tobj = ""  # A temp that carries T record
@@ -207,7 +233,7 @@ def HTME_Record():
         # The break condition of the Text record
         if ("No object code!" in ObjectCodeArray[i]):
             if Tobj != "":  # As long as Tobj doesn't equal to ""
-                HTE_File.write(hex(Count).split(
+                HTE_File.write(hex(Count).split(  # Stores length of the t-record
                     'x')[-1].upper().zfill(2)+""+str(Tobj).replace("\n", "")+"\n")
             Count = 0
             Tobj = ""
@@ -219,6 +245,7 @@ def HTME_Record():
                 HTE_File.write(hex(Count).split(
                     'x')[-1].upper().zfill(2)+""+str(Tobj).replace("\n", "")+"\n")
             # RELATED: we put the counter to 3 because we used a word in the T record
+                # subtracted 1 for range out of bound & divided by 2 because one hex is two bytes
                 Count = int((len(ObjectCodeArray[i]) - 1) / 2)
                 HTE_File.write(
                     "T." + LArray[i].zfill(6).replace("\n", "") + ".")

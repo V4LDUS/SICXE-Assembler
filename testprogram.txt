@@ -45,6 +45,6 @@ WLOOP       TD            =X'05'
             WD            =X'05'
            TIXR             T
            JLT             WLOOP
-           RSUB       
+           RSUB      
             END            FIRST
 *          =X'05'    

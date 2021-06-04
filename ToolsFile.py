@@ -115,18 +115,20 @@ def appendall():
 # function to get the starting address of the program
 
 
-# To get the value of the start of the program
+# Gets the value of the start of the program
 def startingadress():
     startlocation = progArr[0][2]
     return startlocation
 
-# To get the name of the program
+# Gets the name of the program
 
 
 def ProgName():
     ProgName = progArr[0][0].ljust(6, 'x')
     # print(ProgName)
     return ProgName
+
+# Gets program length
 
 
 def ProgLength():
@@ -135,12 +137,16 @@ def ProgLength():
     # print(ProgLen)
     return ProgLen
 
+# checks if it's format 1, 2, or 3/4
+
 
 def checkformat(teststring1):
     for i in range(len(instructions)):
         if instructions[i][0] in teststring1:
 
             return instructions[i][1]
+
+# Extracts opCode
 
 
 def getOpCode(teststring1):
@@ -149,19 +155,18 @@ def getOpCode(teststring1):
             return instructions[i][2]
 
 
-# Used to find the split of the arithematic operation of the addresses
+# Finds latest address before equate to keep
 def handlEQU(var):
-
     finalArray = appendall()
     for i in range(len(finalArray)):
         if var in finalArray[i][0]:
             wanted = i
-
     return wanted
+
+# In case we're dealing with a format 2 for object code
 
 
 def GetRegister(var):
-
     if 'A' in var:
         return 0
     if 'X' in var:
@@ -177,21 +182,25 @@ def GetRegister(var):
     if 'F' in var:
         return 6
 
+# Finds address in symbol table or literal table
 
-def findAddress(mystring):  # method to search for the address in the symbol table
-    if '=' in mystring:
+
+def findAddress(mystring):
+    if '=' in mystring:  # if literal
         for i in range(len(literals)):
             if literals[i][0] in mystring:
                 return literals[i][2].replace("\n", '')
                 break
-    else:
+    else:  # by default, symbol table
         for i in range(len(symbols)):
             if symbols[i][0] in mystring:
                 return symbols[i][1].replace("\n", '')
                 break
 
+# Gets the PC counter
 
-def findpc(myindex):  # method to find the pc
+
+def findpc(myindex):
     for i in range(len(locationCounter)):
         if myindex == i:  # law ana wa2ef 3and element rakam i
             if "-----" in locationCounter[i+1]:
@@ -201,8 +210,10 @@ def findpc(myindex):  # method to find the pc
                 return locationCounter[i+1].replace("\n", '')
                 break
 
+# Gets the base address
 
-def findBase():  # method to search for the address in the symbol table
+
+def findBase():
     finArr = appendall()
     for i in range(len(finArr)):
         if 'BASE' in finArr[i][1]:
