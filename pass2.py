@@ -213,7 +213,7 @@ def HTME_Record():
             Tobj = ""
         elif ("---" in ObjectCodeArray[i]):
             pass
-        elif (Count >= 25):  # The other break condition of the Text record
+        elif (Count >= 27):  # The other break condition of the Text record
             # We put it due to a bug not properly executing the lines below
             if Tobj != "" and '-----' not in LArray[i]:
                 HTE_File.write(hex(Count).split(
@@ -232,7 +232,8 @@ def HTME_Record():
                     "T." + LArray[i+1].zfill(6).replace("\n", "") + ".")
                 Tobj = ("."+ObjectCodeArray[i])
 
-        elif i == len(ObjectCodeArray) - 1:  # When the text record reaches the end
+        elif i == len(ObjectCodeArray)-1:  # When the text record reaches the end
+            Tobj = (Tobj+"."+ObjectCodeArray[i])
             if Tobj != "":
                 HTE_File.write(hex(Count).split(
                     'x')[-1].upper().zfill(2) + "" + str(Tobj).replace("\n", "") + "\n")
